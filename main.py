@@ -19,7 +19,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://localhost:5174", # falls zwei laufen
-    "https://backend-rouge-gamma-83.vercel.app/" # für vercel Deployment
+    "https://backend-rouge-gamma-83.vercel.app" # für vercel Deployment
 ]
 
 app.add_middleware(
