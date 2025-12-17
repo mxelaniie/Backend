@@ -19,7 +19,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://localhost:5174", # falls zwei laufen
-    "https://projektarbeit-git-main-melanies-projects-3f1f17b6.vercel.app/" # für vercel Deployment
+    "https://projektarbeit-git-main-melanies-projects-3f1f17b6.vercel.app" # für vercel Deployment
 ]
 
 app.add_middleware(
