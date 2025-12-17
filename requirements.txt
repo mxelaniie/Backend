@@ -1,42 +1,43 @@
-annotated-doc @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_annotated-doc_1762868213/work
-annotated-types @ file:///home/conda/feedstock_root/build_artifacts/annotated-types_1733247046149/work
-anyio @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_anyio_1758634638/work
-certifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1762976168352/work/certifi
-click @ file:///D:/bld/click_1763248552209/work
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1733218098505/work
-dnspython @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_dnspython_1757292856/work
-email-validator @ file:///home/conda/feedstock_root/build_artifacts/email-validator-meta_1756221362582/work
-exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1763918002538/work
-fastapi @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_fastapi-core_1764031271/work
-fastapi-cli @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_fastapi-cli_1763068963/work
-h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1745526374115/work
-h2 @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_h2_1756364871/work
-hpack @ file:///home/conda/feedstock_root/build_artifacts/hpack_1737618293087/work
-httpcore @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_httpcore_1745602916/work
-httptools @ file:///D:/bld/httptools_1762503950001/work
-httpx @ file:///home/conda/feedstock_root/build_artifacts/httpx_1733663348460/work
-hyperframe @ file:///home/conda/feedstock_root/build_artifacts/hyperframe_1737618333194/work
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1760286409563/work
-Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1741263328855/work
-markdown-it-py @ file:///home/conda/feedstock_root/build_artifacts/markdown-it-py_1754951200865/work
-MarkupSafe @ file:///home/conda/feedstock_root/build_artifacts/markupsafe_1759055168238/work
-mdurl @ file:///home/conda/feedstock_root/build_artifacts/mdurl_1733255585584/work
-pydantic @ file:///home/conda/feedstock_root/build_artifacts/pydantic_1762379462257/work
-pydantic_core @ file:///D:/bld/bld/rattler-build_pydantic-core_1762989023/work
-Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1750615794071/work
-python-dotenv @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_python-dotenv_1761503229/work
-python-multipart @ file:///home/conda/feedstock_root/build_artifacts/python-multipart_1734420773152/work
-PyYAML @ file:///home/conda/feedstock_root/build_artifacts/pyyaml_1758891825788/work
-rich @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_rich_1760026188/work/dist
-rich-toolkit @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_rich-toolkit_1763570584/work
-shellingham @ file:///home/conda/feedstock_root/build_artifacts/shellingham_1762858192781/work
-sniffio @ file:///home/conda/feedstock_root/build_artifacts/sniffio_1762941432086/work
-starlette @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_starlette_1762016292/work
-tomli @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_tomli_1760014679/work
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.11.0
+certifi==2025.11.12
+click==8.3.1
+colorama==0.4.6
+dnspython==2.8.0
+email-validator==2.3.0
+exceptiongroup==1.3.1
+fastapi==0.122.0
+fastapi-cli==0.0.16
+h11==0.16.0
+h2==4.3.0
+hpack==4.1.0
+httpcore==1.0.9
+httptools==0.7.1
+httpx==0.28.1
+hyperframe==6.1.0
+idna==3.11
+Jinja2==3.1.6
+markdown-it-py==4.0.0
+MarkupSafe==3.0.3
+mdurl==0.1.2
+pip==25.3
+pydantic==2.12.4
+pydantic_core==2.41.5
+Pygments==2.19.2
+python-dotenv==1.2.1
+python-multipart==0.0.20
+PyYAML==6.0.3
+rich==14.2.0
+rich-toolkit==0.16.0
+shellingham==1.5.4
+sniffio==1.3.1
+starlette==0.50.0
+tomli==2.3.0
 typer==0.20.0
 typer-slim==0.20.0
-typing-inspection @ file:///home/conda/feedstock_root/build_artifacts/typing-inspection_1759301180011/work
-typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_typing_extensions_1756220668/work
-uvicorn @ file:///D:/bld/uvicorn_1760803780529/work
-watchfiles @ file:///D:/bld/watchfiles_1760456629810/work
-websockets @ file:///D:/bld/bld/rattler-build_websockets_1756476400/work/dist
+typing_extensions==4.15.0
+typing-inspection==0.4.2
+uvicorn==0.38.0
+watchfiles==1.1.1
+websockets==15.0.1
