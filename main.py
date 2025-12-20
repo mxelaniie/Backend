@@ -70,6 +70,3 @@ def get_orte():
             orte.append(ort)
     return orte
 
-@app.get("/hallo")
-def hallo():
-    return {"Hallo Welt!"}
