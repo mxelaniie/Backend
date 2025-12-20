@@ -7,11 +7,18 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from urllib.parse import unquote
+import csv
 
 
 # Datenimport
-with open("Teildatensatz.json", "r", encoding="utf-8") as datei:
-    daten = json.load(datei)
+daten = []
+with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as datei:
+    reader = csv.DictReader(datei)  # liest CSV als Dict
+    for zeile in reader:
+        # Optional: falls die Zahlen als Strings kommen, in int umwandeln
+        zeile["child_pedestrians_count"] = int(zeile["child_pedestrians_count"])
+        zeile["adult_pedestrians_count"] = int(zeile["adult_pedestrians_count"])
+        daten.append(zeile)
 
 app = FastAPI()
 
