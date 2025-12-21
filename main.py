@@ -70,3 +70,47 @@ def get_orte():
             orte.append(ort)
     return orte
 
+@app.get("/analyse/temperaturen")
+def temperaturen(analyseort: str):
+    """
+    Gibt die durchschnittliche Temperatur pro Monat für einen Ort zurück.
+    Rückgabe: [{"year": 2025, "month": 1, "value": 5.2}, ...]
+    """
+    gefiltert = [z for z in daten if z["location_name"] == analyseort]
+
+    # Map für Jahr+Monat: summe + count
+    temp_map = {}  # key: (year, month) -> {"sum": ..., "count": ...}
+
+    for z in gefiltert:
+        ts = z["timestamp"]
+        try:
+            dt = datetime.fromisoformat(ts)
+        except ValueError:
+            continue
+
+        year = dt.year
+        month = dt.month
+
+        value = z.get("temperature")
+        if value is None or value == "":
+            continue
+
+        try:
+            value = float(value)
+        except ValueError:
+            continue
+
+        key = (year, month)
+        if key not in temp_map:
+            temp_map[key] = {"sum": 0.0, "count": 0}
+        temp_map[key]["sum"] += value
+        temp_map[key]["count"] += 1
+
+    # Durchschnitt berechnen
+    result = [
+        {"year": year, "month": month, "value": temp_map[(year, month)]["sum"] / temp_map[(year, month)]["count"]}
+        for (year, month) in sorted(temp_map.keys())
+    ]
+
+    return result
+
