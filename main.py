@@ -48,21 +48,14 @@ def kinder_anteil(analyseort: str):
     for z in gefiltert:
         child = z["child_pedestrians_count"]
         adult = z["adult_pedestrians_count"]
-        total = child + adult
-
-        if total == 0:
-            kinderanteil = 0
-        else:
-            kinderanteil = child / total 
+        
 
         # Sinnvolle Infos zurückgeben
         resultat.append({
             "timestamp": z.get("timestamp"),
-            "month": z.get("month"),
             "location_name": z.get("location_name"),
             "child": child,
             "adult": adult,
-            "kinder_anteil": kinderanteil
         })
 
     return resultat
