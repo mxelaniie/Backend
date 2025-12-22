@@ -82,7 +82,7 @@ def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
             "child": agg[m]["child"],
             "adult": agg[m]["adult"],
             "anteil": anteil,
-            "temperature": temp
+            "temperature": f"{temp}°C"
         })
 
     return result
