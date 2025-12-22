@@ -16,6 +16,7 @@ with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as f:
 
 app = FastAPI()
 
+# Erlaubt Anfragen von bestimmten Frontend-URLs
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -34,14 +35,16 @@ month_names = [
 ]
 
 # Endpoints
+# Gibt eine Liste aller Orte zurück
 @app.get("/orte")
 def get_orte():
     orte = []
     for z in daten:
-        if z["location_name"] not in orte:
+        if z["location_name"] not in orte: # Prüfen, ob Ort schon in Liste
             orte.append(z["location_name"])
     return orte
 
+# Analysiert den Anteil von Kindern pro Monat für einen bestimmten Ort und Jahr
 @app.get("/analyse/kinderanteil_monat")
 def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
     gefiltert = []
@@ -67,16 +70,19 @@ def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
     result = []
     for m in range(1, 13):
         total = agg[m]["child"] + agg[m]["adult"]
+        # Anteil Kinder berechnen
         if total > 0:
             anteil = agg[m]["child"] / total
         else:
             anteil = 0
 
+        # Durchschnittstemperatur berechnen, falls tempCheck aktiv ist
         if tempCheck and agg[m]["temp_count"]:
             temp = round(agg[m]["temp_sum"] / agg[m]["temp_count"], 1)
         else:
             temp = None
 
+        # Ergebnis für den Monat erstellen
         result.append({
             "month_name": month_names[m-1],
             "child": agg[m]["child"],
