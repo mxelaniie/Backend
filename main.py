@@ -84,7 +84,7 @@ def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
     for month in range(1, 13):
         data = agg_map.get(month, {"child": 0, "adult": 0, "temperature_sum": 0, "temperature_count": 0})
         total = data["child"] + data["adult"]
-        share = data["child"] / total if total > 0 else 0
+        anteil = data["child"] / total if total > 0 else 0
         temperature = (
             round(data["temperature_sum"] / data["temperature_count"], 1)
             if tempCheck and data["temperature_count"] > 0 else None
@@ -93,7 +93,7 @@ def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
             "month_name": month_names[month - 1],
             "child": data["child"],
             "adult": data["adult"],
-            "share": share,
+            "anteil": anteil,
             "temperature": f"{temperature}°C" if temperature is not None else None
         })
 
@@ -154,6 +154,6 @@ def kinder_anteil_max(analyseort: str):
 
     return {
         "location_name": analyseort,
-        "max_child_share": max_anteil,
+        "max_child_anteil": max_anteil,
         "timestamp": max_zeitpunkt
     }
