@@ -5,31 +5,24 @@ import csv
 
 # CSV-Daten laden
 daten = []
-with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as datei:
-    reader = csv.DictReader(datei)
-    for zeile in reader:
-        zeile["child_pedestrians_count"] = int(zeile["child_pedestrians_count"])
-        zeile["adult_pedestrians_count"] = int(zeile["adult_pedestrians_count"])
-        # Temperatur 
-        if zeile.get("temperature"):
-            try:
-                zeile["temperature"] = float(zeile["temperature"])
-            except ValueError:
-                zeile["temperature"] = None
-        daten.append(zeile)
+with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for z in reader:
+        z["child_pedestrians_count"] = int(z["child_pedestrians_count"])
+        z["adult_pedestrians_count"] = int(z["adult_pedestrians_count"])
+        z["temperature"] = float(z["temperature"])
+        daten.append(z)
 
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://projektarbeit-git-main-melanies-projects-3f1f17b6.vercel.app"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://projektarbeit-git-main-melanies-projects-3f1f17b6.vercel.app"
+    ],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
@@ -40,111 +33,86 @@ month_names = [
     "Juli", "August", "September", "Oktober", "November", "Dezember"
 ]
 
-
 # Endpunkte
 @app.get("/orte")
 def get_orte():
-    orte = list({z["location_name"] for z in daten})
-    return sorted(orte)
-
+    orte = []
+    for z in daten:
+        if z["location_name"] not in orte:
+            orte.append(z["location_name"])
+    return orte
 
 @app.get("/analyse/kinderanteil_monat")
 def kinderanteil_monat(analyseort: str, jahr: int, tempCheck: bool = False):
-    """Aggregiert Kinderanteil pro Monat für ein Jahr und optional Temperatur"""
-    gefiltert = [
-        z for z in daten
-        if z["location_name"] == analyseort and z["timestamp"].startswith(str(jahr))
-    ]
+    gefiltert = []
+    for z in daten:
+        if z["location_name"] == analyseort and z["timestamp"].startswith(str(jahr)):
+            gefiltert.append(z)
 
-    agg_map = {}
+    # Aggregation pro Monat
+    agg = {}
+    for m in range(1, 13):
+        agg[m] = {"child": 0, "adult": 0, "temp_sum": 0, "temp_count": 0}
+
     for z in gefiltert:
-        try:
-            dt = datetime.fromisoformat(z["timestamp"])
-        except ValueError:
-            continue
-        month = dt.month
-        if month not in agg_map:
-            agg_map[month] = {"child": 0, "adult": 0, "temperature_sum": 0, "temperature_count": 0}
-        agg_map[month]["child"] += z["child_pedestrians_count"]
-        agg_map[month]["adult"] += z["adult_pedestrians_count"]
-        if tempCheck and z.get("temperature") is not None:
-            agg_map[month]["temperature_sum"] += z["temperature"]
-            agg_map[month]["temperature_count"] += 1
+        m = datetime.fromisoformat(z["timestamp"]).month
+        agg[m]["child"] += z["child_pedestrians_count"]
+        agg[m]["adult"] += z["adult_pedestrians_count"]
+        if tempCheck:
+            agg[m]["temp_sum"] += z["temperature"]
+            agg[m]["temp_count"] += 1
 
     result = []
-    for month in range(1, 13):
-        data = agg_map.get(month, {"child": 0, "adult": 0, "temperature_sum": 0, "temperature_count": 0})
-        total = data["child"] + data["adult"]
-        anteil = data["child"] / total if total > 0 else 0
-        temperature = (
-            round(data["temperature_sum"] / data["temperature_count"], 1)
-            if tempCheck and data["temperature_count"] > 0 else None
-        )
+    for m in range(1, 13):
+        total = agg[m]["child"] + agg[m]["adult"]
+        anteil = agg[m]["child"] / total if total > 0 else 0
+        temp = (agg[m]["temp_sum"] / agg[m]["temp_count"]) if tempCheck and agg[m]["temp_count"] else None
         result.append({
-            "month_name": month_names[month - 1],
-            "child": data["child"],
-            "adult": data["adult"],
+            "month_name": month_names[m-1],
+            "child": agg[m]["child"],
+            "adult": agg[m]["adult"],
             "anteil": anteil,
-            "temperature": f"{temperature}°C" if temperature is not None else None
+            "temperature": f"{temp}°C" if temp is not None else None
         })
-
     return result
-
 
 @app.get("/analyse/temperaturen")
 def temperaturen(analyseort: str):
-    """Durchschnittliche Temperatur pro Monat für einen Ort"""
     gefiltert = [z for z in daten if z["location_name"] == analyseort]
-
     temp_map = {}
+
     for z in gefiltert:
-        ts = z["timestamp"]
-        try:
-            dt = datetime.fromisoformat(ts)
-        except ValueError:
-            continue
-
-        year = dt.year
-        month = dt.month
-        value = z.get("temperature")
-        if value is None:
-            continue
-
-        key = (year, month)
+        dt = datetime.fromisoformat(z["timestamp"])
+        key = (dt.year, dt.month)
         if key not in temp_map:
-            temp_map[key] = {"sum": 0.0, "count": 0}
-        temp_map[key]["sum"] += value
+            temp_map[key] = {"sum": 0, "count": 0}
+        temp_map[key]["sum"] += z["temperature"]
         temp_map[key]["count"] += 1
 
-    result = [
-        {"year": year, "month": month, "value": temp_map[(year, month)]["sum"] / temp_map[(year, month)]["count"]}
-        for (year, month) in sorted(temp_map.keys())
-    ]
-
+    result = []
+    for (year, month), vals in sorted(temp_map.items()):
+        result.append({
+            "year": year,
+            "month": month,
+            "value": vals["sum"] / vals["count"]
+        })
     return result
-
 
 @app.get("/analyse/kinder_anteil_max")
 def kinder_anteil_max(analyseort: str):
-    """Gibt den Zeitpunkt mit maximalem Kinderanteil zurück"""
     gefiltert = [z for z in daten if z["location_name"] == analyseort]
-
-    max_anteil = 0
-    max_zeitpunkt = None
+    max_anteil, max_ts = 0, None
 
     for z in gefiltert:
-        child = z["child_pedestrians_count"]
-        adult = z["adult_pedestrians_count"]
-        total = child + adult
+        total = z["child_pedestrians_count"] + z["adult_pedestrians_count"]
         if total == 0:
             continue
-        anteil = child / total
+        anteil = z["child_pedestrians_count"] / total
         if anteil > max_anteil:
-            max_anteil = anteil
-            max_zeitpunkt = z["timestamp"]
+            max_anteil, max_ts = anteil, z["timestamp"]
 
     return {
         "location_name": analyseort,
         "max_child_anteil": max_anteil,
-        "timestamp": max_zeitpunkt
+        "timestamp": max_ts
     }
