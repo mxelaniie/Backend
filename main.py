@@ -3,17 +3,14 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 import csv
 
-# -------------------------
 # CSV-Daten laden
-# -------------------------
 daten = []
 with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as datei:
     reader = csv.DictReader(datei)
     for zeile in reader:
-        # Zähler in int umwandeln
         zeile["child_pedestrians_count"] = int(zeile["child_pedestrians_count"])
         zeile["adult_pedestrians_count"] = int(zeile["adult_pedestrians_count"])
-        # Temperatur optional in float
+        # Temperatur 
         if zeile.get("temperature"):
             try:
                 zeile["temperature"] = float(zeile["temperature"])
@@ -21,12 +18,9 @@ with open("Gesamtdatensatz.csv", "r", encoding="utf-8") as datei:
                 zeile["temperature"] = None
         daten.append(zeile)
 
-# -------------------------
-# FastAPI initialisieren
-# -------------------------
+
 app = FastAPI()
 
-# CORS konfigurieren
 origins = [
     "http://localhost:5173",
     "http://localhost:5174",
@@ -46,13 +40,10 @@ month_names = [
     "Juli", "August", "September", "Oktober", "November", "Dezember"
 ]
 
-# -------------------------
-# Endpunkte
-# -------------------------
 
+# Endpunkte
 @app.get("/orte")
 def get_orte():
-    """Gibt alle Orte zurück"""
     orte = list({z["location_name"] for z in daten})
     return sorted(orte)
 
